@@ -1,10 +1,10 @@
-import AboutPage from './AboutPage/AboutPage';
+import AboutPage from './pages/AboutPage/AboutPage';
 import './App.css';
-import Footer from './Footer/Footer';
-import Hero from './Hero/Hero';
-import HomePage from './HomePage/HomePage';
-import LoginPage from './LoginPage/LoginPage';
-import Menu from './Menu/Menu';
+import Footer from './pages/Footer/Footer';
+import Hero from './pages/Hero/Hero';
+import HomePage from './pages/HomePage/HomePage';
+import LoginPage from './pages/LoginPage/LoginPage';
+import Menu from './pages/Menu/Menu';
 import {
   BrowserRouter as Router,
   Routes,
