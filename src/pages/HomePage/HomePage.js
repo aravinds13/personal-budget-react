@@ -25,8 +25,24 @@ function HomePage() {
     })
 
     useEffect(() => {
-        getBudget(dataSource, setDataSource);
-    },[dataSource]);
+        const getBudget = async () => {
+            try {
+                const res = await axios.get('http://localhost:3001/budget');
+                const chartData = {
+                    datasets: [{
+                        ...dataSource.datasets[0],
+                        data: res.data.myBudget.map(item => item.budget),
+                    }],
+                    labels: res.data.myBudget.map(item => item.title),
+                };
+                setDataSource(chartData);
+            } catch (error) {
+                console.error("Failed to fetch budget data:", error);
+            }
+        };
+
+        getBudget();
+    }, []);
     
     // debugger
     // getBudget(dataSource, setDataSource)
@@ -105,8 +121,8 @@ function HomePage() {
                 <article>
                     <h1>D3Chart</h1>
                     <div>
-                        {dataSource.datasets[0].data.length > 0 ? 
-                            <D3Chart data={dataSource} /> : <p>Loading...</p>}
+                        {/* {dataSource.datasets[0].data.length > 0 ? 
+                            <D3Chart data={dataSource} /> : <p>Loading...</p>} */}
                     </div>
                 </article>
 
@@ -115,18 +131,6 @@ function HomePage() {
         </main>
     );
   }
-
-const getBudget = (dataSource, setDataSource) => {
-    axios.get('http://localhost:3001/budget')
-        .then(res => {
-            var chartData = dataSource;
-            for (var i = 0; i < res.data.myBudget.length; i++) {
-                chartData.datasets[0].data[i] = res.data.myBudget[i].budget;
-                chartData.labels[i] = res.data.myBudget[i].title;
-            }
-            setDataSource(chartData);
-        });
-}
 
 export default HomePage;
   
