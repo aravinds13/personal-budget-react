@@ -121,8 +121,8 @@ function HomePage() {
                 <article>
                     <h1>D3Chart</h1>
                     <div>
-                        {/* {dataSource.datasets[0].data.length > 0 ? 
-                            <D3Chart data={dataSource} /> : <p>Loading...</p>} */}
+                        {dataSource.datasets[0].data.length > 0 ? 
+                            <D3Chart data={dataSource} /> : <p>Loading...</p>}
                     </div>
                 </article>
 

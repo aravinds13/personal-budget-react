@@ -20,18 +20,16 @@ class DonutChart extends Component {
     drawChart() {
         d3.select(this.chRef.current).select("svg").remove(); // Remove the old svg
     
-        const { data } = this.props;
-        const { datasets, labels } = data;
+        const { datasets, labels } = this.props.data;
+        const data = datasets[0].data; // Extract data array from datasets
     
         const svgContainer = d3.select(this.chRef.current).node();
         const width = svgContainer.getBoundingClientRect().width;
         const height = width;
         const margin = 15;
         let radius = Math.min(width / 2, height / 2) / 2 - margin;
-        // legend Position
         let legendPosition = d3.arc().innerRadius(radius / 1.75).outerRadius(radius);
     
-        // Create SVG
         const svg = d3.select(this.chRef.current)
             .append('svg')
             .attr("width", '100%')
@@ -41,51 +39,46 @@ class DonutChart extends Component {
             .attr("transform", "translate(" + Math.min(width / 2, height / 2) / 2 + "," + Math.min(width / 2, height / 2) / 2 + ")");
     
         let pie = d3.pie()
-            .value(d => d)
-        let data_ready = pie(datasets[0])
+            .value(d => d);
     
-        // Donut partition  
+        let data_ready = pie(data);
+    
         svg
             .selectAll('whatever')
             .data(data_ready)
             .enter()
             .append('path')
             .attr('d', d3.arc()
-                .innerRadius(radius / 1.75)  // This is the size of the donut hole
+                .innerRadius(radius / 1.75)
                 .outerRadius(radius)
             )
-            .attr('fill', (d, i) => colors[i])
-            .attr("stroke", "#fff")
-            .style("stroke-width", "2")
-            .style("opacity", "0.8")
+            .attr('fill', (d, i) => datasets[0].backgroundColor[i]); // Use backgroundColor from datasets
     
+        const labelArc = d3.arc()
+            .outerRadius(radius * 0.8) // Adjust the radius to place labels outside the chart
+            .innerRadius(radius / 1.75);
     
-        // Legend group and legend name 
         svg
             .selectAll('mySlices')
             .data(data_ready)
             .enter()
             .append('g')
-            .attr("transform", d => `translate(${legendPosition.centroid(d)})`)
-            .attr("class", 'legend-g')
-            .style("user-select", "none")
+            .attr("transform", d => `translate(${labelArc.centroid(d)})`)
             .append('text')
             .text((d, i) => labels[i])
-            .style("text-anchor", "middle")
-            .style("font-weight", 700)
-            .style("fill", '#222')
-            .style("font-size", 14);
+            .attr("dy", "0.35em")
+            .attr("text-anchor", "middle")
+            .style("font-size", "12px");
     
-        //Label for value
         svg
             .selectAll('.legend-g')
             .append('text')
-            .text((d) => { return d.data })
-            .style("fill", '#444')
-            .style("font-size", 12)
-            .style("text-anchor", "middle")
+            .text((d) => { return d.data; })
             .attr("y", 16);
     }
+    
+    
+    
 
     render() {
         return <>
